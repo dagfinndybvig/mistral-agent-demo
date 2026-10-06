@@ -20,6 +20,7 @@ citations.
 |---|---|
 | `ub_loop.py` | Main demo. Runs a query against the agent; `--once` for a single cycle, without the flag it loops forever with one update every 3 minutes. Appends every update to `weather_update.log`. |
 | `UB.py` | Minimal single-shot script (one conversation, print the answer). Useful as the smallest working example. |
+| `web_ui.py` | Simple HTML interface. Serves `http://127.0.0.1:8000` with the update history from `weather_update.log` and an "Update now" button that triggers one agent cycle. Uses only the Python standard library on top of the existing packages. |
 | `.env` | Holds `MISTRAL_API_KEY`. Loaded by `python-dotenv`. Ignored by git — never commit it. |
 | `.gitignore` | Excludes `.env`, `*.log`, and Python bytecode from version control. |
 | `weather_update.log` | Append-only history of loop updates with timestamps. Not tracked by git (runtime artifact). |
@@ -55,9 +56,18 @@ python ub_loop.py --once
 # autonomous loop: one update every 3 minutes
 python ub_loop.py
 
+# web interface: open http://127.0.0.1:8000 in a browser
+python web_ui.py
+
 # On Windows cmd, prefix for correct rendering of Norwegian characters:
 set PYTHONIOENCODING=utf-8 && python ub_loop.py --once
 ```
+
+The web interface reads its update history from `weather_update.log` (the same
+file the loop writes), so it shows the loop's history too if both run. The
+"Update now" button triggers one agent cycle on demand; a failed call shows the
+error in the page and the server keeps running. Importing `web_ui.py` reuses
+`ub_loop.py`'s agent version resolution and response renderer.
 
 Stop the loop with `Ctrl+C`. A failed API call prints an error and the loop
 continues; the log file records everything.
