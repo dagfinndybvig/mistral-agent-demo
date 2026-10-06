@@ -11,12 +11,21 @@ load_dotenv()
 client = Mistral(api_key=os.environ.get("MISTRAL_API_KEY"))
 
 AGENT_ID = os.environ.get("DEMO_AGENT_ID", "ag_YOUR_AGENT_ID")
+
+
 def latest_agent_version(agent_id):
     versions = list(client.beta.agents.list_versions(agent_id=agent_id))
     return max(v.version for v in versions)
 
 
-AGENT_VERSION = latest_agent_version(AGENT_ID)
+try:
+    AGENT_VERSION = latest_agent_version(AGENT_ID)
+except Exception as e:
+    print(f"Error: could not resolve agent version for {AGENT_ID}: "
+          f"{type(e).__name__}: {e}")
+    print("Check your API key, network connection, and DEMO_AGENT_ID.")
+    sys.exit(1)
+
 QUERY = "Update"
 INTERVAL_SECONDS = 180
 LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "weather_update.log")
@@ -68,4 +77,5 @@ def main():
         time.sleep(INTERVAL_SECONDS)
 
 
-main()
+if __name__ == "__main__":
+    main()

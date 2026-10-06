@@ -23,7 +23,6 @@ citations.
 | `.env` | Holds `MISTRAL_API_KEY`. Loaded by `python-dotenv`. Ignored by git — never commit it. |
 | `.gitignore` | Excludes `.env`, `*.log`, and Python bytecode from version control. |
 | `weather_update.log` | Append-only history of loop updates with timestamps. Not tracked by git (runtime artifact). |
-| `check_agent.py`, `run_ub.py` | Small inspection/helper scripts from development. Safe to delete. |
 
 ## Setup
 
